@@ -1,0 +1,73 @@
+import React, { useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+const dummyData = [
+  { state: "AL", mileage: 5000 }, { state: "AK", mileage: 4500 }, { state: "AZ", mileage: 6000 },
+  { state: "AR", mileage: 5200 }, { state: "CA", mileage: 7000 }, { state: "CO", mileage: 5800 },
+  { state: "CT", mileage: 4800 }, { state: "DE", mileage: 4200 }, { state: "FL", mileage: 6500 },
+  { state: "GA", mileage: 5700 }, { state: "HI", mileage: 3500 }, { state: "ID", mileage: 5100 },
+  { state: "IL", mileage: 5900 }, { state: "IN", mileage: 5500 }, { state: "IA", mileage: 5300 },
+  { state: "KS", mileage: 5400 }, { state: "KY", mileage: 5200 }, { state: "LA", mileage: 5600 },
+  { state: "ME", mileage: 4700 }, { state: "MD", mileage: 5100 }, { state: "MA", mileage: 4900 },
+  { state: "MI", mileage: 5800 }, { state: "MN", mileage: 5700 }, { state: "MS", mileage: 5300 },
+  { state: "MO", mileage: 5500 }, { state: "MT", mileage: 5200 }, { state: "NE", mileage: 5400 },
+  { state: "NV", mileage: 5900 }, { state: "NH", mileage: 4600 }, { state: "NJ", mileage: 5200 },
+  { state: "NM", mileage: 5700 }, { state: "NY", mileage: 5500 }, { state: "NC", mileage: 5800 },
+  { state: "ND", mileage: 5100 }, { state: "OH", mileage: 5600 }, { state: "OK", mileage: 5500 },
+  { state: "OR", mileage: 5700 }, { state: "PA", mileage: 5400 }, { state: "RI", mileage: 4300 },
+  { state: "SC", mileage: 5500 }, { state: "SD", mileage: 5200 }, { state: "TN", mileage: 5600 },
+  { state: "TX", mileage: 6800 }, { state: "UT", mileage: 5800 }, { state: "VT", mileage: 4500 },
+  { state: "VA", mileage: 5700 }, { state: "WA", mileage: 6000 }, { state: "WV", mileage: 5000 },
+  { state: "WI", mileage: 5500 }, { state: "WY", mileage: 5300 }
+];
+
+const MileageDashboardGraph = () => {
+  const [hoveredBar, setHoveredBar] = useState(null);
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-2 border border-gray-300 rounded shadow">
+          <p className="font-bold">{label}</p>
+          <p>Mileage: {payload[0].value}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">US Minimum Personal Mileage by State</h1>
+      <Alert className="mb-4">
+        <AlertTitle>Note</AlertTitle>
+        <AlertDescription>
+          This dashboard uses dummy data for illustration. In a real application, you would fetch up-to-date data from a reliable source.
+        </AlertDescription>
+      </Alert>
+      <ResponsiveContainer width="100%" height={500}>
+        <BarChart data={dummyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="state" />
+          <YAxis />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar 
+            dataKey="mileage" 
+            fill="#8884d8"
+            onMouseEnter={(data) => setHoveredBar(data.state)}
+            onMouseLeave={() => setHoveredBar(null)}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+      {hoveredBar && (
+        <div className="mt-4 p-2 bg-gray-100 rounded">
+          <p><strong>Selected State:</strong> {hoveredBar}</p>
+          <p><strong>Mileage:</strong> {dummyData.find(item => item.state === hoveredBar).mileage} miles</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MileageDashboardGraph;
